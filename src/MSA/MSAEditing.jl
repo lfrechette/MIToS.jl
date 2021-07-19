@@ -343,3 +343,43 @@ function gapstrip!(msa::AbstractMultipleSequenceAlignment,
     end
     msa
 end
+
+"""
+This function is similar to `gapstrip!' but does not filter on reference
+
+This functions deletes/filters sequences and columns/positions on the MSA on the following
+order:
+
+1. Removes all the sequences with a coverage with respect to the number of
+columns/positions on the MSA **less** than a `coveragelimit`
+(default to `0.75`: sequences with 25% of gaps).
+2. Removes all the columns/position on the MSA with **more** than a `gaplimit`
+(default to `0.5`: 50% of gaps).
+"""
+function gapstripnoref!(msa::AbstractMultipleSequenceAlignment,
+                   annotate::Bool=isa(msa,AnnotatedAlignedObject);
+                   coveragelimit::Float64=0.75, gaplimit::Float64=0.5)
+
+    # Remove sequences with pour coverage of the reference sequence
+    if ncolumns(msa) != 0
+        if annotate
+            annotate_modification!(msa,
+                string("gapstripnoref! : Deletes sequences with a coverage less than ",
+                coveragelimit))
+        end
+        filtersequences!(msa, vec(coverage(msa) .>= coveragelimit), annotate)
+    else
+        throw("There are not columns in the MSA after the gap trimming")
+    end
+    # Remove columns with a porcentage of gap greater than gaplimit
+    if nsequences(msa) != 0
+        if annotate
+            annotate_modification!(msa,
+                string("gapstripnoref! : Deletes columns with more than ", gaplimit, " gaps."))
+        end
+        filtercolumns!(msa, vec(columngapfraction(msa) .<= gaplimit), annotate)
+    else
+        throw("There are not sequences in the MSA after coverage filter")
+    end
+    msa
+end

@@ -210,6 +210,71 @@ function msacontacts(msa::AnnotatedMultipleSequenceAlignment,
     contacts
 end
 
+# Distances and Orientations
+# ==========================
+
+"""
+This function is based on `msacontacts' but insted returns a matrix of distances
+
+This function takes an `AnnotatedMultipleSequenceAlignment` with correct *ColMap*
+annotations and two dicts:
+1. The first is an `OrderedDict{String,PDBResidue}` from PDB residue number to `PDBResidue`.
+2. The second is a `Dict{Int,String}` from **MSA column number on the input file** to PDB residue number.
+`msadistances` returns a `PairwiseListMatrix{Float64,false}` of distances. `NaN`
+indicates a missing value.
+"""
+function msadistances(msa::AnnotatedMultipleSequenceAlignment,
+                     residues::AbstractDict{String,PDBResidue},
+                     column2residues::AbstractDict{Int,String},
+                     criteria::String="Heavy")
+    colmap = getcolumnmapping(msa)
+    distances = columnpairsmatrix(msa)
+    plm = getarray(distances)
+    @inbounds @iterateupper plm false begin
+
+        resi = get(column2residues, colmap[i], "")
+        resj = get(column2residues, colmap[j], "")
+        if resi != "" && resj != "" && haskey(residues, resi) && haskey(residues, resj)
+            list[k] = Float64(distance(residues[resi], residues[resj], criteria=criteria))
+        else
+            list[k] = NaN
+        end
+
+    end
+    distances
+end
+
+"""
+This function is based on `msacontacts' but insted returns a matrix of orientations
+
+This function takes an `AnnotatedMultipleSequenceAlignment` with correct *ColMap*
+annotations and two dicts:
+1. The first is an `OrderedDict{String,PDBResidue}` from PDB residue number to `PDBResidue`.
+2. The second is a `Dict{Int,String}` from **MSA column number on the input file** to PDB residue number.
+`msaorientations` returns a `PairwiseListMatrix{Float64,false}` of relative residue pair orientations. `NaN`
+indicates a missing value.
+"""
+function msaorientations(msa::AnnotatedMultipleSequenceAlignment,
+                     residues::AbstractDict{String,PDBResidue},
+                     column2residues::AbstractDict{Int,String})
+    colmap = getcolumnmapping(msa)
+    orientations = columnpairsmatrix(msa)
+    plm = getarray(distances)
+    @inbounds @iterateupper plm false begin
+
+        resi = get(column2residues, colmap[i], "")
+        resj = get(column2residues, colmap[j], "")
+        if resi != "" && resj != "" && haskey(residues, resi) && haskey(residues, resj)
+            
+            list[k] = Float64(angle_bt_residues(residues[resi], residues[resj])
+        else
+            list[k] = NaN
+        end
+
+    end
+    orientations
+end
+
 # AUC (contact prediction)
 # ========================
 
