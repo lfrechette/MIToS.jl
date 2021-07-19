@@ -266,7 +266,7 @@ function msaorientations(msa::AnnotatedMultipleSequenceAlignment,
         resj = get(column2residues, colmap[j], "")
         if resi != "" && resj != "" && haskey(residues, resi) && haskey(residues, resj)
             
-            list[k] = Float64(angle_bt_residues(residues[resi], residues[resj])
+            list[k] = Float64(angle_bt_residues(residues[resi], residues[resj]))
         else
             list[k] = NaN
         end
