@@ -1,6 +1,8 @@
 [![MIToS](http://diegozea.github.io/MIToS.jl/latest/assets/MIToS_logo.png)](http://diegozea.github.io/MIToS.jl/)
 ### Mutual Information Tools for protein Sequence analysis
 
+***NOTE:*** This is a modified version of the MIToS package which includes some new functions.
+
 Julia 1.0 or higher: **MIToS v2**  
 
 Linux, OSX:
