@@ -259,7 +259,7 @@ function msaorientations(msa::AnnotatedMultipleSequenceAlignment,
                      column2residues::AbstractDict{Int,String})
     colmap = getcolumnmapping(msa)
     orientations = columnpairsmatrix(msa)
-    plm = getarray(distances)
+    plm = getarray(orientations)
     @inbounds @iterateupper plm false begin
 
         resi = get(column2residues, colmap[i], "")
