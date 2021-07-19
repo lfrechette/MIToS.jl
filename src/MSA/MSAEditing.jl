@@ -320,7 +320,7 @@ function gapstrip!(msa::AbstractMultipleSequenceAlignment,
             string("gapstrip! : Deletes columns with gaps in the first sequence."))
     end
     adjustreference!(msa, annotate)
-    # Remove sequences with pour coverage of the reference sequence
+    # Remove sequences with poor coverage of the reference sequence
     if ncolumns(msa) != 0
         if annotate
             annotate_modification!(msa,
@@ -360,7 +360,7 @@ function gapstripnoref!(msa::AbstractMultipleSequenceAlignment,
                    annotate::Bool=isa(msa,AnnotatedAlignedObject);
                    coveragelimit::Float64=0.75, gaplimit::Float64=0.5)
 
-    # Remove sequences with pour coverage of the reference sequence
+    # Remove sequences with poor coverage of the reference sequence
     if ncolumns(msa) != 0
         if annotate
             annotate_modification!(msa,

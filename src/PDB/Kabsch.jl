@@ -69,11 +69,22 @@ end
 
 "Returns the Cα with best occupancy in the `PDBResidue`."
 function getCA(res::PDBResidue)
-    @assert length(res) != 0 "There is no atoms in the residue."
+    @assert length(res) != 0 "There are no atoms in the residue."
     CAs = findatoms(res, "CA")
-    @assert length(CAs) != 0 "There is no alpha carbons in the residue."
+    @assert length(CAs) != 0 "There are no alpha carbons in the residue."
     CAindex = selectbestoccupancy(res, CAs)
     res.atoms[CAindex]
+end
+
+"Returns the Cbeta with best occupancy in the `PDBResidue`."
+function getCB(res::PDBResidue)
+    @assert length(res) != 0 "There are no atoms in the residue."
+    #if res.id.name == "GLY"
+    #    CBs = ... #need to find an alternative here
+    CBs = findatoms(res, "CB")
+    @assert length(CBs) != 0 "There are no alpha carbons in the residue."
+    CBindex = selectbestoccupancy(res, CBs)
+    res.atoms[CBindex]
 end
 
 """
