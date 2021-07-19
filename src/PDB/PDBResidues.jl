@@ -132,14 +132,14 @@ NaN
 """
 
 function angle_bt_residues(res1::PDBResidue, res2::PDBResidue)
-    if res1.id.name == "GLY" or res2.id.name == "GLY"
+    if res1.id.name == "GLY" || res2.id.name == "GLY"
         return(NaN)
     else
         res1CAs = findCA(res1)
         res2CAs = findCA(res2)
         res1CBs = findCB(res1)
         res2CBs = findCB(res2)
-        if(length(res1CAs)==0 or length(res1CBs)==0 or length(res2CAs)==0 or length(res2CBs)==0)
+        if(length(res1CAs)==0 || length(res1CBs)==0 || length(res2CAs)==0 || length(res2CBs)==0)
             return(NaN)
         end
         v1 = res1CBs[0].coordinates-res1CAs[0].coordinates
