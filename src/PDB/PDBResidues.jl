@@ -142,8 +142,8 @@ function angle_bt_residues(res1::PDBResidue, res2::PDBResidue)
         if(length(res1CAs)==0 || length(res1CBs)==0 || length(res2CAs)==0 || length(res2CBs)==0)
             return(NaN)
         end
-        v1 = res1CBs[1].coordinates-res1CAs[1].coordinates
-        v2 = res2CBs[1].coordinates-res2CAs[1].coordinates
+        v1 = res1.atoms[res1CBs[1]].coordinates-res1.atoms[res1CAs[1]].coordinates
+        v2 = res2.atoms[res2CBs[1]].coordinates-res2.atoms[res2CAs[1]].coordinates
         norms = (norm(v1)*norm(v2))
         if norms != 0
             return( acosd(dot(v1,v2) / norms) )
