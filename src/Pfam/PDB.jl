@@ -245,6 +245,34 @@ function msadistances(msa::AnnotatedMultipleSequenceAlignment,
 end
 
 """
+This function calculates the angle between two residues, as defined
+by their Calpha and Cbeta vectors. In the case of glycine, the angle returned is
+NaN
+"""
+
+function angle_bt_residues(res1::PDBResidue, res2::PDBResidue)
+    if res1.id.name == "GLY" || res2.id.name == "GLY"
+        return(NaN)
+    else
+        res1CAs = findCA(res1)
+        res2CAs = findCA(res2)
+        res1CBs = findCB(res1)
+        res2CBs = findCB(res2)
+        if(length(res1CAs)==0 || length(res1CBs)==0 || length(res2CAs)==0 || length(res2CBs)==0)
+            return(NaN)
+        end
+        v1 = res1CBs[0].coordinates-res1CAs[0].coordinates
+        v2 = res2CBs[0].coordinates-res2CAs[0].coordinates
+        norms = (norm(v1)*norm(v2))
+        if norms != 0
+            return( acosd(dot(v1,v2) / norms) )
+        else
+            return(0.0)
+        end
+    end
+end
+
+"""
 This function is based on `msacontacts' but insted returns a matrix of orientations
 
 This function takes an `AnnotatedMultipleSequenceAlignment` with correct *ColMap*
@@ -274,6 +302,8 @@ function msaorientations(msa::AnnotatedMultipleSequenceAlignment,
     end
     orientations
 end
+
+
 
 # AUC (contact prediction)
 # ========================
